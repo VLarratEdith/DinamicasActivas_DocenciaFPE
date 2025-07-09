@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dinámicas Pedagógicas Grupales</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f9;
+      color: #333;
+    }
+    header {
+      background-color: #3498db;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      background-color: #2ecc71;
+    }
+    nav button {
+      background: none;
+      border: none;
+      color: white;
+      padding: 15px 20px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    nav button:hover {
+      background-color: #27ae60;
+    }
+    .container {
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    .card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .category-icon {
+      font-size: 24px;
+      vertical-align: middle;
+      margin-right: 10px;
+    }
+    .dynamic-title {
+      font-size: 20px;
+      color: #3498db;
+    }
+    footer {
+      background-color: #3498db;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+    .hidden {
+      display: none;
+    }
+    .avatar-picker img {
+      width: 50px;
+      margin: 5px;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+    .avatar-picker img.selected {
+      border: 2px solid #3498db;
+    }
+    .achievement {
+      background: #f1c40f;
+      padding: 10px;
+      border-radius: 6px;
+      margin: 10px 0;
+    }
+    .quiz-question {
+      background: #ecf0f1;
+      padding: 15px;
+      border-radius: 8px;
+    }
+    .quiz-option {
+      padding: 10px;
+      margin-top: 10px;
+      background: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .quiz-option.correct {
+      background: #2ecc71;
+      color: white;
+    }
+    .quiz-option.wrong {
+      background: #e74c3c;
+      color: white;
+    }
+    .scoreboard {
+      background: white;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>📚 Dinámicas Pedagógicas Grupales</h1>
+  <p>Una App para docentes innovadores</p>
+</header>
+
+<nav>
+  <button onclick="showSection('home')">Inicio</button>
+  <button onclick="showSection('dynamics')">Dinámicas</button>
+  <button onclick="showSection('contribute')">Contribuir</button>
+  <button onclick="showSection('game')">Juego</button>
+  <button onclick="showSection('profile')">Perfil</button>
+</nav>
+
+<div class="container">
+
+  <!-- HOME -->
+  <section id="home">
+    <div class="card">
+      <h2>Bienvenido a Dinámicas Pedagógicas Grupales 🎓</h2>
+      <p>Explora, contribuye y juega con dinámicas pedagógicas organizadas por categorías.</p>
+      <ul>
+        <li><strong>Dinámicas listas para usar</strong></li>
+        <li><strong>Juego interactivo</strong> para mejorar tu práctica docente</li>
+        <li><strong>Sistema de contribución</strong> validado por expertos</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- DYNAMIC LIST -->
+  <section id="dynamics" class="hidden">
+    <h2>🔍 Explorar Dinámicas</h2>
+    <select onchange="filterDynamics(this.value)">
+      <option value="">Todas las categorías</option>
+      <option value="comunicacion">Comunicación 💬</option>
+      <option value="liderazgo">Liderazgo 👑</option>
+      <option value="creatividad">Creatividad 🧠</option>
+      <option value="conflictos">Resolución de Conflictos ⚖️</option>
+      <option value="retroalimentacion">Retroalimentación 📊</option>
+      <option value="inclusion">Inclusión 🌍</option>
+    </select>
+
+    <div id="dynamic-list"></div>
+  </section>
+
+  <!-- CONTRIBUTE -->
+  <section id="contribute" class="hidden">
+    <h2>✍️ Contribuir una Dinámica</h2>
+    <form onsubmit="submitDynamic(event)">
+      <label>Nombre:</label><br/>
+      <input type="text" required/><br/>
+      
+      <label>Categoría:</label><br/>
+      <select required>
+        <option value="comunicacion">Comunicación 💬</option>
+        <option value="liderazgo">Liderazgo 👑</option>
+        <option value="creatividad">Creatividad 🧠</option>
+        <option value="conflictos">Resolución de Conflictos ⚖️</option>
+        <option value="retroalimentacion">Retroalimentación 📊</option>
+        <option value="inclusion">Inclusión 🌍</option>
+      </select><br/>
+
+      <label>Objetivo (máx. 2 líneas):</label><br/>
+      <textarea rows="2" maxlength="100" required></textarea><br/>
+
+      <label>Descripción paso a paso:</label><br/>
+      <textarea rows="6" required></textarea><br/>
+
+      <label>Ejemplo 1:</label><br/>
+      <input type="text"/><br/>
+      <label>Ejemplo 2:</label><br/>
+      <input type="text"/><br/>
+      <label>Recomendaciones:</label><br/>
+      <textarea rows="3"></textarea><br/>
+      <button type="submit">Enviar para revisión</button>
+    </form>
+  </section>
+
+  <!-- GAME -->
+  <section id="game" class="hidden">
+    <h2>🎮 Desafío Docente</h2>
+    <div id="quiz-container"></div>
+    <button onclick="nextQuestion()">Siguiente pregunta</button>
+    <div class="scoreboard" id="score-display">Puntaje: 0</div>
+  </section>
+
+  <!-- PROFILE -->
+  <section id="profile" class="hidden">
+    <h2>👤 Mi Perfil</h2>
+    <div class="card">
+      <label>Avatar:</label>
+      <div class="avatar-picker">
+        <img src="https://via.placeholder.com/50?text=A" onclick="selectAvatar(this)" class="selected"/>
+        <img src="https://via.placeholder.com/50?text=B" onclick="selectAvatar(this)"/>
+        <img src="https://via.placeholder.com/50?text=C" onclick="selectAvatar(this)"/>
+        <img src="https://via.placeholder.com/50?text=D" onclick="selectAvatar(this)"/>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Insignias</h3>
+      <div class="achievement">🏆 Innovador</div>
+      <div class="achievement">🏅 Experto en Comunicación</div>
+    </div>
+    <div class="card">
+      <h3>Mis Dinámicas Contribuidas</h3>
+      <ul id="contributions-list">
+        <li>Aún no has contribuido ninguna dinámica.</li>
+      </ul>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  &copy; 2025 Dinámicas Pedagógicas Grupales | Diseñado para docentes innovadores
+</footer>
+
+<script>
+  const dynamicsData = [
+    {
+      name: "Tormenta de Ideas",
+      category: "comunicacion",
+      objetivo: "Generar ideas colectivamente sobre un tema específico.",
+      descripcion: "Formar equipos, asignar un moderador, dar tiempo definido para generar ideas sin crítica, luego votar las mejores.",
+      ejemplo1: "En clase de historia para debatir la Revolución Industrial.",
+      ejemplo2: "En un taller de emprendimiento para desarrollar prototipos."
+    },
+    {
+      name: "Role Play",
+      category: "conflictos",
+      objetivo: "Simular situaciones reales para resolver conflictos.",
+      descripcion: "Asignar roles, escenificar el conflicto, analizar perspectivas y proponer soluciones.",
+      ejemplo1: "Docente y alumnos simulando una reunión de padres.",
+      ejemplo2: "Simulación de mediación entre dos grupos de estudiantes."
+    },
+    {
+      name: "World Café",
+      category: "comunicacion",
+      objetivo: "Fomentar conversaciones profundas en grupos pequeños.",
+      descripcion: "Grupos rotan mesas cada cierto tiempo, discutiendo un tema central y dejando notas visibles.",
+      ejemplo1: "En un curso de filosofía para discutir ética profesional.",
+      ejemplo2: "En un taller de profesores para planificación anual."
+    },
+    {
+      name: "Phillips 6x6",
+      category: "liderazgo",
+      objetivo: "Promover reflexión grupal rápida y ordenada.",
+      descripcion: "Equipos de 6 personas durante 6 minutos discuten un tema y presentan síntesis.",
+      ejemplo1: "En clase de biología para discutir impacto del cambio climático.",
+      ejemplo2: "En formación docente para evaluar estrategias de enseñanza."
+    },
+    {
+      name: "Rueda de Feedback",
+      category: "retroalimentacion",
+      objetivo: "Recibir retroalimentación constructiva de forma estructurada.",
+      descripcion: "Un participante recibe comentarios de los demás siguiendo turnos y normas claras.",
+      ejemplo1: "Después de una exposición oral en clase.",
+      ejemplo2: "En reuniones de equipo docente para evaluar proyectos."
+    },
+    {
+      name: "Círculo Inclusivo",
+      category: "inclusion",
+      objetivo: "Asegurar que todos los miembros del grupo se expresen.",
+      descripcion: "Se pasa un objeto simbólico y quien lo tiene puede hablar sin interrupciones.",
+      ejemplo1: "En sesiones de tutoría escolar.",
+      ejemplo2: "En talleres de diversidad e inclusión."
+    },
+  {
+      name: "Tutoría",
+      category: "dinámica interpersonal / orientación",
+      objetivo: "Facilitar el acompañamiento personalizado del alumno para mejorar su proceso de aprendizaje y desarrollo personal.",
+      descripcion: "Consiste en un proceso sistemático de apoyo entre un tutor y uno o varios estudiantes, donde se trabajan aspectos académicos, sociales y emocionales.",
+      ejemplo1: "En una escuela secundaria, el tutor tiene reuniones semanales con un grupo reducido de estudiantes para revisar sus progresos, resolver dudas y trabajar habilidades socioemocionales.",
+      ejemplo2: "En una universidad, se implementa un sistema de tutorías entre pares, donde estudiantes de cursos superiores guían a los nuevos en la adaptación académica y social."
+    },
+
+    {
+      name: "Técnica de la Diana o Rueda de la Vida",
+      category: "Autoevaluación",
+      objetivo: "Ayudar a los participantes a visualizar su nivel de satisfacción o logro en distintas áreas de la vida.",
+      descripcion: "Se dibuja una rueda dividida en sectores (familia, trabajo, salud, etc.) y se marca un punto en cada sector según el nivel de cumplimiento o satisfacción.",
+      ejemplo1: "En una sesión de coaching personal, una persona evalúa su equilibrio vital y establece metas personales.",
+      ejemplo2: "En un curso de formación docente, los profesores reflexionan sobre su bienestar profesional y áreas a mejorar."
+    },
+    {
+      name: "Técnica del Grupo Nominal",
+      category: "Toma de decisiones", 
+      objetivo: "Obtener opiniones individuales y consensuarlas sin influencias grupales previas.",
+      descripcion: "Los participantes escriben sus ideas individualmente, luego se comparten y votan las mejores, priorizando por consenso.",
+      ejemplo1: "En una reunión escolar, se decide qué actividades extraescolares se realizarán el próximo trimestre.",
+      ejemplo2: "En un taller de innovación educativa, se seleccionan las mejores estrategias para mejorar el clima escolar."
+    },
+
+    {
+      name: "Microenseñanza",
+      category: "Formación docente", 
+      objetivo: "Mejorar habilidades didácticas mediante clases cortas y retroalimentación inmediata.",
+      descripcion: "Un docente da una miniclase (5-10 minutos) ante compañeros o estudiantes, que luego le dan retroalimentación constructiva.",
+      ejemplo1: "En una formación inicial de profesores, practican técnicas de motivación estudiantil.",
+      ejemplo2: "Docentes en servicio realizan simulacros de clase para integrar nuevas tecnologías."
+    },
+
+    {
+      name: "Seminario",
+      category: "Aprendizaje colaborativo", 
+      objetivo: "Profundizar en un tema mediante presentaciones y debates guiados por expertos o estudiantes.",
+      descripcion: "Sesiones estructuradas donde se presenta información relevante y se promueve la participación activa del grupo.",
+      ejemplo1: "En una universidad, se organiza un seminario sobre inteligencia artificial aplicada a la educación.",
+      ejemplo2: "En un instituto, los alumnos presentan seminarios sobre diferentes culturas antiguas."
+    },
+    {
+      name: "Técnica de Feedback 360º",
+      category: "Evaluación formativa", 
+      objetivo: "Recibir evaluaciones de múltiples perspectivas (superiores, pares, subordinados, autoevaluación) para mejorar eSe recogen valoraciones anónimas de varias fuentes y se compilan para dar una visión integral del desempeño.",
+      descripcion: "Sesiones estructuradas donde se presenta información relevante y se promueve la participación activa del grupo.",
+      ejemplo1: "En un centro educativo, se evalúa el liderazgo del director desde el claustro, padres y equipo directivo.",
+      ejemplo2: "Estudiantes de magisterio reciben feedback de profesores, compañeros y prácticas en el aula."
+    },
+    {
+      name: "Mesa Redonda",
+      category: "Debate", 
+      objetivo: "Discutir temas relevantes con expertos o portavoces de diferentes puntos de vista.",
+      descripcion: "Un moderador coordina una conversación entre varios panelistas que exponen sus ideas frente a un público.",
+      ejemplo1: "En un evento educativo, se debate sobre el impacto de la tecnología en el aprendizaje.",
+      ejemplo2: "En un colegio, se organiza una mesa redonda sobre diversidad e inclusión con representantes de distintas comunidades."
+    },
+    {
+      name: "Técnica Delphi",
+      category: "Investigación", 
+      objetivo: "Alcanzar consenso entre expertos sobre un tema futuro o complejo, manteniendo anonimato.",
+      descripcion: "Se realiza una serie de cuestionarios sucesivos, compartiendo resultados parciales hasta llegar a un acuerdo general.",
+      ejemplo1: "En un proyecto de investigación educativa, se pronostican tendencias metodológicas para los próximos 10 años.",
+      ejemplo2: "Una comunidad educativa consulta a expertos sobre posibles reformas curriculares."
+    },
+    {
+      name: "Meta Plan",
+      category: "Visualización", 
+      objetivo: "Representar gráficamente ideas, proyectos o contenidos para facilitar su comprensión y seguimiento.",
+      descripcion: "Similar al mapa conceptual, permite organizar información de forma visual y jerárquica, ayudando a ver la estructura global de un tema.",
+      ejemplo1: "En una clase de ciencias, los estudiantes organizan los conceptos clave de un tema como la fotosíntesis.",
+      ejemplo2: "Un equipo docente diseña un meta plan para planificar el currículo de un curso."
+    },
+    {
+      name: "Los Seis Sombreros para Pensar",
+      category: "Pensamiento crítico", 
+      objetivo: "Fomentar diferentes formas de pensar sobre un mismo problema (racional, emocional, creativo, etc.).",
+      descripcion: "Cada “sombrero” representa una actitud mental diferente (blanco: datos, rojo: emociones, negro: riesgos, amarillo: beneficios, verde: creatividad, azul: control del proceso).",
+      ejemplo1: "En una clase de ética, se analiza un dilema moral desde seis perspectivas.",
+      ejemplo2: "En un proyecto escolar de emprendimiento, se evalúa una idea de negocio usando los sombreros."
+    },
+    {
+      name: "Servicio de Aprendizaje (APS)",
+      category: "Aprendizaje basado en proyectos", 
+      objetivo: "Integrar el aprendizaje académico con la resolución de necesidades reales de la comunidad.",
+      descripcion: "En una clase de biología, los alumnos crean huertos escolares para promover la alimentación saludable en su barrio.",
+      ejemplo1: "En una clase de biología, los alumnos crean huertos escolares para promover la alimentación saludable en su barrio.",
+      ejemplo2: "Estudiantes de primaria organizan una campaña de sensibilización sobre reciclaje en el colegio y comunidad."
+    },
+    {
+      name: "Técnica del Semáforo",
+      category: "Reflexión rápida", 
+      objetivo: "Realizar una autoevaluación o retroalimentación rápida sobre conocimientos o emociones relacionadas con un tema.",
+      descripcion: "Se usan tres colores (verde: entiendo, amarillo: tengo dudas, rojo: no entiendo) para que los estudiantes expresen su estado de comprensión o emoción.",
+      ejemplo1: "Al finalizar una clase, los alumnos indican su nivel de comprensión del tema.",
+      ejemplo2: "Antes de comenzar una actividad, se pregunta cómo se sienten los estudiantes (motivados, nerviosos, aburridos)."
+    },
+
+  ];
+
+  const quizQuestions = [
+    {
+      question: "Tienes un grupo con alumnos tímidos y dominantes. ¿Qué dinámica usas?",
+      options: ["World Café", "Role Play", "Phillips 6x6"],
+      correct: "World Café"
+    },
+    {
+      question: "Necesitas fomentar la creatividad en un grupo de niños de primaria. ¿Cuál eliges?",
+      options: ["Rueda de Feedback", "Tormenta de Ideas", "Círculo Inclusivo"],
+      correct: "Tormenta de Ideas"
+    },
+    {
+      question: "Quieres ayudar a los alumnos a resolver un conflicto entre ellos. ¿Cuál es la mejor opción?",
+      options: ["Role Play", "Phillips 6x6", "World Café"],
+      correct: "Role Play"
+    },
+    {
+      question: "Estás en una reunión de coordinación docente y necesitas generar ideas rápidamente. ¿Qué dinámica aplicas?",
+      options: ["Phillips 6x6", "Círculo Inclusivo", "Rueda de Feedback"],
+      correct: "Phillips 6x6"
+    },
+    {
+      question: "Quieres que los estudiantes reflexionen sobre su equilibrio personal y académico. ¿Qué técnica usarías?",
+      opciones: ["Técnica de la Diana", "Meta Plan", "Microenseñanza"],
+      correct: "Técnica de la Diana"
+    },
+    {
+      question: "Necesitas evaluar el desempeño de un profesor desde múltiples perspectivas. ¿Cuál es la mejor opción?", 
+      opciones: ["Feedback 360º", "Tutoría", "Mesa Redonda"], 
+      correct: "Feedback 360º"
+    },
+    {
+      question: "Estás formando a nuevos docentes y quieres que practiquen técnicas pedagógicas brevemente con retroalimentación inmediata. ¿Qué dinámica implementas?", 
+      opciones: ["Microenseñanza", "Los Seis Sombreros", "Aprendizaje Servicio"], 
+      correct: "Microenseñanza"
+    },
+    {
+      question: "Deseas organizar un debate entre expertos sobre nuevas tendencias educativas. ¿Qué formato usarías?", 
+      opciones: ["Mesa Redonda", "Técnica Delphi", "Seminario"], 
+      correct: "Mesa Redonda"
+    },
+    {
+      question: "Quieres que tus alumnos desarrollen diferentes formas de pensar sobre un problema complejo. ¿Qué herramienta usarías?", 
+      opciones: ["Los Seis Sombreros para Pensar", "Técnica del Semáforo", "Grupo Nominal"], 
+      correct: "Los Seis Sombreros para Pensar"
+    },
+
+    {
+      question: "Necesitas que tus estudiantes trabajen en un proyecto que beneficie a la comunidad. ¿Qué metodología aplicas?", 
+      opciones: ["Servicio de Aprendizaje (APS)", "Técnica Delphi", "Meta Plan"], 
+      correct: "Servicio de Aprendizaje (APS)"  
+    },
+    {
+      question: "En un taller de innovación, necesitas recoger ideas de todos sin influencia mutua. ¿Qué técnica aplicas?", 
+      opciones: ["Grupo Nominal", "Phillips 6x6", "Técnica Delphi"], 
+      correct: "Grupo Nominal"
+    },
+    {
+      question: "Estás diseñando un proyecto comunitario vinculado al currículo escolar. ¿Qué enfoque usarías?", 
+      opciones: ["Aprendizaje Servicio", "Meta Plan", "Tutoría"], 
+      correct: "Aprendizaje Servicio"
+    },
+    {
+      question: "Necesitas hacer una planificación visual del contenido de un curso. ¿Qué dinámica elegirías?", 
+      opciones: ["Meta Plan", "Rueda de la Vida", "Técnica del Semáforo"], 
+      correct: "Meta Plan"
+    },
+    {
+      question: "Estás organizando una actividad para conocer el sentir general del grupo antes de empezar una clase importante. ¿Qué técnica usarías?", 
+      opciones: ["Técnica del Semáforo", "Técnica de la Diana", "Seminario"], 
+      correct: "Técnica del Semáforo"
+    },
+    {
+      question: "Quieres realizar una investigación prospectiva sobre futuras reformas educativas con un panel de expertos. ¿Qué método usarías?", 
+      opciones: ["Técnica Delphi", "Grupo Nominal", "Mesa Redonda"], 
+      correct: "Técnica Delphi"
+    },
+    {
+      question: "Estás realizando una sesión de evaluación grupal y deseas que cada persona también valore su propio desempeño. ¿Qué técnica incluye?", 
+      opciones: ["Feedback 360º", "Técnica del Semáforo", "Tutoría"], 
+      correct: "Feedback 360º"
+    },
+
+  ];
+
+  let currentScore = 0;
+  let streak = 0;
+
+  function showSection(id) {
+    document.querySelectorAll("section").forEach(sec => sec.classList.add("hidden"));
+    document.getElementById(id).classList.remove("hidden");
+    if (id === 'dynamics') loadDynamics();
+  }
+
+  function filterDynamics(category) {
+    const filtered = category ? dynamicsData.filter(d => d.category === category) : dynamicsData;
+    renderDynamics(filtered);
+  }
+
+  function loadDynamics() {
+    renderDynamics(dynamicsData);
+  }
+
+  function renderDynamics(list) {
+    const container = document.getElementById("dynamic-list");
+    container.innerHTML = "";
+    list.forEach(dynamic => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <div><span class="category-icon">${getCategoryIcon(dynamic.category)}</span><span class="dynamic-title">${dynamic.name}</span></div>
+        <p><strong>Objetivo:</strong> ${dynamic.objetivo}</p>
+        <p><strong>Descripción:</strong> ${dynamic.descripcion}</p>
+        <p><strong>Ejemplo 1:</strong> ${dynamic.ejemplo1}</p>
+        <p><strong>Ejemplo 2:</strong> ${dynamic.ejemplo2}</p>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function getCategoryIcon(cat) {
+    switch (cat) {
+      case 'comunicacion': return '💬';
+      case 'liderazgo': return '👑';
+      case 'creatividad': return '🧠';
+      case 'conflictos': return '⚖️';
+      case 'retroalimentacion': return '📊';
+      case 'inclusion': return '🌍';
+      default: return '';
+    }
+  }
+
+  function submitDynamic(e) {
+    e.preventDefault();
+    alert("¡Dinámica enviada! Será revisada por nuestros moderadores.");
+    e.target.reset();
+    const list = document.getElementById("contributions-list");
+    const li = document.createElement("li");
+    li.textContent = "Dinámica pendiente de aprobación...";
+    list.appendChild(li);
+  }
+
+  function selectAvatar(img) {
+    document.querySelectorAll(".avatar-picker img").forEach(i => i.classList.remove("selected"));
+    img.classList.add("selected");
+  }
+
+  function nextQuestion() {
+    const idx = Math.floor(Math.random() * quizQuestions.length);
+    const q = quizQuestions[idx];
+    const container = document.getElementById("quiz-container");
+    container.innerHTML = "";
+    const div = document.createElement("div");
+    div.className = "quiz-question";
+    div.innerHTML = `<p>${q.question}</p>`;
+    q.options.forEach(opt => {
+      const btn = document.createElement("div");
+      btn.className = "quiz-option";
+      btn.textContent = opt;
+      btn.onclick = () => checkAnswer(btn, opt === q.correct, q.correct);
+      div.appendChild(btn);
+    });
+    container.appendChild(div);
+  }
+
+  function checkAnswer(button, isCorrect, correctAnswer) {
+    const buttons = document.querySelectorAll(".quiz-option");
+    buttons.forEach(b => b.onclick = null); // Disable further clicks
+    if (isCorrect) {
+      button.classList.add("correct");
+      currentScore += 10;
+      streak++;
+      if (streak >= 3) {
+        currentScore += 5;
+        streak = 0;
+      }
+    } else {
+      button.classList.add("wrong");
+      buttons.forEach(b => {
+        if (b.textContent === correctAnswer) b.classList.add("correct");
+      });
+      streak = 0;
+    }
+    document.getElementById("score-display").textContent = `Puntaje: ${currentScore}`;
+  }
+
+  // Initial load
+  showSection('home');
+</script>
+
+</body>
+</html>
